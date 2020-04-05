@@ -19,44 +19,52 @@ var afterdayMin;
 var afterdayMax;
 var afterdayImage;
 
-class WeatherScreen extends StatelessWidget {
+class WeatherScreen extends StatefulWidget {
   String cityName;
   String cityId;
   WeatherScreen(this.cityName, this.cityId);
 
+  WeatherModel weatherModel = WeatherModel();
+
+  Future getWeatherData() async {
+    var weatherData = await weatherModel.getCityWeather(cityId);
+
+    today = weatherData['forecasts'][0]['dateLabel'];
+    todayTelop = weatherData['forecasts'][0]['telop'];
+    todayMin = weatherData['forecasts'][0]['temperature']['min'];
+    todayMax = weatherData['forecasts'][0]['temperature']['max'];
+    todayImage = weatherData['forecasts'][0]['image']['url'];
+
+    tommorow = weatherData['forecasts'][1];
+    tommorow = weatherData['forecasts'][1]['dateLabel'];
+    tommorowTelop = weatherData['forecasts'][1]['telop'];
+    tommorowMin = weatherData['forecasts'][1]['temperature']['min']['celsius'];
+    tommorowMax = weatherData['forecasts'][1]['temperature']['max']['celsius'];
+    tommorowImage = weatherData['forecasts'][1]['image']['url'];
+
+    afterday = weatherData['forecasts'][2]['dateLabel'];
+    afterdayTelop = weatherData['forecasts'][2]['telop'];
+    afterdayMin = weatherData['forecasts'][2]['temperature']['min'];
+    afterdayMax = weatherData['forecasts'][2]['temperature']['max'];
+    afterdayImage = weatherData['forecasts'][2]['image']['url'];
+  }
+
   @override
+  _WeatherScreenState createState() => _WeatherScreenState();
+}
+
+class _WeatherScreenState extends State<WeatherScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.getWeatherData();
+  }
+
   Widget build(BuildContext context) {
-    WeatherModel weatherModel = WeatherModel();
-
-    Future getWeatherData() async {
-      var weatherData = await weatherModel.getCityWeather(cityId);
-
-      today = weatherData['forecasts'][0]['dateLabel'];
-      todayTelop = weatherData['forecasts'][0]['telop'];
-      todayMin = weatherData['forecasts'][0]['temperature']['min'];
-      todayMax = weatherData['forecasts'][0]['temperature']['max'];
-      todayImage = weatherData['forecasts'][0]['image']['url'];
-
-      tommorow = weatherData['forecasts'][1];
-      tommorow = weatherData['forecasts'][1]['dateLabel'];
-      tommorowTelop = weatherData['forecasts'][1]['telop'];
-      tommorowMin =
-          weatherData['forecasts'][1]['temperature']['min']['celsius'];
-      tommorowMax =
-          weatherData['forecasts'][1]['temperature']['max']['celsius'];
-      tommorowImage = weatherData['forecasts'][1]['image']['url'];
-
-      afterday = weatherData['forecasts'][2]['dateLabel'];
-      afterdayTelop = weatherData['forecasts'][2]['telop'];
-      afterdayMin = weatherData['forecasts'][2]['temperature']['min'];
-      afterdayMax = weatherData['forecasts'][2]['temperature']['max'];
-      afterdayImage = weatherData['forecasts'][2]['image']['url'];
-    }
-
-    getWeatherData();
     return Scaffold(
       appBar: AppBar(
-        title: Text('$cityNameの天気予報'),
+        title: Text('${widget.cityName}の天気予報'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

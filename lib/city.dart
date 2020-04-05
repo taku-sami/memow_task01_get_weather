@@ -8,7 +8,7 @@ class City extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(prefectureName),
+        title: Text('管轄地域を選択してください'),
       ),
       body: ListView(
         children: <Widget>[
